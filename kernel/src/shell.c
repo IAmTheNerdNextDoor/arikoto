@@ -234,16 +234,16 @@ static int cmd_mem() {
 static int cmd_reboot() {
     printk(COLOR_RED, "Rebooting system...\n");
 
-    /* Send reboot command to PS/2 controller */
-    outb(0x64, 0xFE);
+    /* We don't have a method of rebooting because we don't have acpi yet,
+    * this is a temporary solution. We jump to the reset vector, which should
+    * cause a triple fault. We'll have to remove this when we have interrupts,
+    * since it causes an exception.
+    */
+    asm volatile("jmp 0xfffffff0");
 
-    /* Wait for reboot...*/
-    for (volatile int i = 0; i < 10000000; i++) {
-    }
-
-    /* Okay, now this is bad */
-    panic("PANIC: Arikoto failed to reboot, hold down the power button.");
-
+    /* Should never reach here */
+    panic("Arikoto failed to reboot!\n");
+    
     /*
     * This should not execute because we panicked, but
     * I'm including it because you know how compilers be.
