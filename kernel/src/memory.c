@@ -1,7 +1,4 @@
-#include <stdint.h>
-#include <stddef.h>
 #include <limine.h>
-#include <stdbool.h>
 #include <request.h>
 #include <kernel.h>
 

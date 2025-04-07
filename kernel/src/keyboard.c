@@ -1,10 +1,6 @@
 #include <keyboard.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <serial.h>
-#include <idt.h>
 #include <pic.h>
-#include <print.h>
 #include <pit.h>
 
 #define PS2_DATA_PORT    0x60

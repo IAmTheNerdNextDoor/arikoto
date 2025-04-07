@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include <isr.h>
 #include <irq.h>
 #include <serial.h>

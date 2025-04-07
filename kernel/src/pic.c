@@ -1,6 +1,5 @@
 #include <pic.h>
 #include <serial.h>
-#include <stdint.h>
 
 void io_wait(void) {
     outb(0x80, 0);

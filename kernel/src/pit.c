@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include <serial.h>
 #include <pic.h>
 #include <pit.h>

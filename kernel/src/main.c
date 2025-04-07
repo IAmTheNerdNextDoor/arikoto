@@ -1,7 +1,3 @@
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <limine.h>
 #include <kernel.h>
 #include <print.h>
 #include <memory.h>

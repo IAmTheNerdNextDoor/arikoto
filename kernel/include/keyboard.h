@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdbool.h>
-#include <stdint.h>
 
 /* Keyboard scan codes */
 #define KEY_ESC          0x01

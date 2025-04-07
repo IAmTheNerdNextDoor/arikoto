@@ -3,7 +3,6 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdint.h>
 #include <string.h>
 
 /* Halt and catch fire function (obvious) */

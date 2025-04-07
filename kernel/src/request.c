@@ -1,4 +1,4 @@
-#include "request.h"
+#include <request.h>
 
 /* Framebuffer request */
 __attribute__((used, section(".limine_requests")))

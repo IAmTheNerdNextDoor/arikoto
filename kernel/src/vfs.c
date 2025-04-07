@@ -1,12 +1,5 @@
-#include <stddef.h>
-#include <string.h>
-#include <stdint.h>
 #include <vfs.h>
-#include <print.h>
-#include <stdbool.h>
 #include <kernel.h>
-#include <stdarg.h>
-
 
 #define MAX_MOUNT_POINTS 8192
 #define MAX_FILES 8192

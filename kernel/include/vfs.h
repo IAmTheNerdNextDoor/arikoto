@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stddef.h>
-#include <stdbool.h>
 
 #define MAX_FILE_NAME_LENGTH 64
 #define MAX_MOUNT_PATH_LENGTH 64

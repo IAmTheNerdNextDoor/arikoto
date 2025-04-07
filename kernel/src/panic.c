@@ -1,6 +1,5 @@
 #include <kernel.h>
 #include <print.h>
-#include <stdarg.h>
 #include <shell.h>
 
 static void panic_vfprintf(const char *fmt, va_list args) {

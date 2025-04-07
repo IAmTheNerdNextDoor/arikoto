@@ -1,10 +1,3 @@
-#include <kernel.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <memory.h>
-#include <request.h>
-#include <print.h>
 #include <vfs.h>
 
 void vfs_test(void) {
