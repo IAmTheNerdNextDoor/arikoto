@@ -62,6 +62,7 @@ static int cmd_reboot();
 static int cmd_divzero();
 static int cmd_uptime();
 static int cmd_raytrace();
+static int cmd_vfstest();
 
 void shell_init() {
     shell_register_command("help", cmd_help);
@@ -74,6 +75,7 @@ void shell_init() {
     shell_register_command("dividebyzero", cmd_divzero);
     shell_register_command("uptime", cmd_uptime);
     shell_register_command("raytrace", cmd_raytrace);
+    shell_register_command("vfstest", cmd_vfstest);
 }
 
 static int parse_args(char *input, char **argv) {
@@ -162,25 +164,36 @@ static int cmd_clear() {
     return 0;
 }
 
-static int cmd_ls() {
-    char buffer[1024];
-    memset(buffer, 0, sizeof(buffer));
+static int cmd_ls(int argc, char **argv) {
+    const char *path_to_list = "/";
+    if (argc > 1) {
+        path_to_list = argv[1];
+    }
 
-    int result = vfs_list_files(buffer, sizeof(buffer));
+    char list_buffer[2048];
+    memset(list_buffer, 0, sizeof(list_buffer));
 
-    if (result >= 0) {
-        char *file = buffer;
+    int result = vfs_list_files(path_to_list, list_buffer, sizeof(list_buffer));
+
+    if (result == VFS_SUCCESS) {
+        if (list_buffer[0] == '\0') {
+             printk(COLOR_YELLOW, "Directory '%s' is empty.\n", path_to_list);
+             return 0;
+        }
+        char *file = list_buffer;
         while (*file) {
-            printk(COLOR_CYAN, file);
+            printk(COLOR_CYAN, "%s\n", file);
 
             file += strlen(file) + 1;
 
-            if (file >= buffer + sizeof(buffer)) {
-                break;
+            if (file >= list_buffer + sizeof(list_buffer)) {
+                 printk(COLOR_RED, "Error: list buffer overflow during processing.\n");
+                 break;
             }
         }
     } else {
-        printk(COLOR_RED, "Failed to list files\n");
+        printk(COLOR_RED, "Failed to list files in '%s' (Error code: %d)\n", path_to_list, result);
+        return result;
     }
 
     return 0;
@@ -192,14 +205,23 @@ static int cmd_cat(int argc, char **argv) {
         return -1;
     }
 
-    char buffer[1024];
-    memset(buffer, 0, sizeof(buffer));
+    char read_buffer[1025];
+    int bytes_read;
+    bytes_read = vfs_read(argv[1], read_buffer, sizeof(read_buffer) - 1, 0);
 
-    if (vfs_read(argv[1], buffer, sizeof(buffer)) >= 0) {
-        printk(COLOR_WHITE, "%s\n", buffer);
+    if (bytes_read >= 0) {
+        read_buffer[bytes_read] = '\0';
+        printk(COLOR_WHITE, "%s", read_buffer);
+        if (bytes_read == sizeof(read_buffer) - 1) {
+             printk(COLOR_YELLOW, "\n[Warning: File might be larger than buffer]\n");
+        } else {
+             if (bytes_read > 0 && read_buffer[bytes_read - 1] != '\n') {
+                 printk(COLOR_WHITE, "\n");
+             }
+        }
     } else {
-        printk(COLOR_RED, "Failed to read file: %s", argv[1]);
-        return -1;
+        printk(COLOR_RED, "Failed to read file '%s' (Error code: %d)\n", argv[1], bytes_read);
+        return bytes_read;
     }
 
     return 0;
@@ -459,4 +481,11 @@ void r(int x, int y) {
 	frame_buffer[offset++] = G / A / A;
 	frame_buffer[offset++] = R / A / A;
 	offset++;
+}
+
+static int cmd_vfstest() {
+    screen_clear();
+    vfs_test();
+
+    return 0;
 }

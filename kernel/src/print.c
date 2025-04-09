@@ -87,6 +87,7 @@ void putchar(char c, uint32_t color) {
 int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
     char *buf = buffer;
     char *end = buffer + size - 1;
+
     while (*fmt && buf < end) {
         if (*fmt != '%') {
             *buf++ = *fmt++;
@@ -95,35 +96,81 @@ int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
 
         fmt++;
 
-        if (*fmt == 's') {
-            char *s = va_arg(args, char *);
-            while (*s && buf < end) *buf++ = *s++;
+        if (*fmt == '%') {
+            *buf++ = *fmt++;
+            continue;
         }
-        else if (*fmt == 'd' || *fmt == 'x') {
+
+        if (*fmt == 'd') {
             int num = va_arg(args, int);
-            int base = (*fmt == 'x') ? 16 : 10;
+            unsigned int u_num;
+            bool is_negative = false;
+
+            if (num < 0) {
+                is_negative = true;
+                u_num = (unsigned int)-num;
+            } else {
+                u_num = (unsigned int)num;
+            }
+            if (is_negative && buf < end) {
+                *buf++ = '-';
+            }
             char tmp[11];
             int i = 0;
+            if (u_num == 0) {
+                tmp[i++] = '0';
+            } else {
+                while (u_num > 0 && i < 10) {
+                    tmp[i++] = (u_num % 10) + '0';
+                    u_num /= 10;
+                }
+            }
+            while (i-- > 0 && buf < end) {
+                *buf++ = tmp[i];
+            }
+        }
+        else if (*fmt == 'x') {
+            unsigned int num = va_arg(args, unsigned int);
+            char tmp[9];
+            int i = 0;
+            int base = 16;
 
             if (num == 0) {
                 tmp[i++] = '0';
             } else {
-                while (num && i < 10) {
-                    tmp[i++] = "0123456789ABCDEF"[num % base];
+                 while (num > 0 && i < 8) {
+                    tmp[i++] = "0123456789abcdef"[num % base];
                     num /= base;
                 }
             }
-
-            while (i-- && buf < end) {
+            while (i-- > 0 && buf < end) {
                 *buf++ = tmp[i];
             }
         }
-        else if (*fmt == 'C') {
-            *buf++ = '\x01';
+        else if (*fmt == 's') {
+            char *s = va_arg(args, char *);
+            if (s == NULL) {
+                s = "(null)";
+            }
+            while (*s && buf < end) {
+                *buf++ = *s++;
+            }
+        }
+         else if (*fmt == 'c') {
             *buf++ = (char)va_arg(args, int);
+         }
+        else if (*fmt == 'C') {
+            if (buf < end - 1) {
+                *buf++ = '\x01';
+                *buf++ = (char)va_arg(args, int);
+            } else {
+                (void)va_arg(args, int);
+            }
         }
         else {
-            *buf++ = *fmt;
+            if(buf < end) {
+                *buf++ = *fmt;
+            }
         }
         fmt++;
     }

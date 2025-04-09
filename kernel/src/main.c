@@ -36,9 +36,6 @@ void kmain(void) {
     /* Start Keyboard */
     init_keyboard();
 
-    /* Mount VFS and create file via vfs_test */
-    vfs_test();
-
     /* Start shell */
     shell_init();
     shell_run();
