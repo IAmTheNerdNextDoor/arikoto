@@ -35,6 +35,28 @@ void init_idt() {
     idtp.base = (uint64_t)&idt;
 
     idt_set_gate(0, (uint64_t)do_isr0, 0x08, 0x8E);
+    idt_set_gate(1, (uint64_t)do_isr1, 0x08, 0x8E);
+    idt_set_gate(2, (uint64_t)do_isr2, 0x08, 0x8E);
+    idt_set_gate(3, (uint64_t)do_isr3, 0x08, 0x8E);
+    idt_set_gate(4, (uint64_t)do_isr4, 0x08, 0x8E);
+    idt_set_gate(5, (uint64_t)do_isr5, 0x08, 0x8E);
+    idt_set_gate(6, (uint64_t)do_isr6, 0x08, 0x8E);
+    idt_set_gate(7, (uint64_t)do_isr7, 0x08, 0x8E);
+    idt_set_gate(8, (uint64_t)do_isr8, 0x08, 0x8E);
+    idt_set_gate(9, (uint64_t)do_isr9, 0x08, 0x8E);
+    idt_set_gate(10, (uint64_t)do_isr10, 0x08, 0x8E);
+    idt_set_gate(11, (uint64_t)do_isr11, 0x08, 0x8E);
+    idt_set_gate(12, (uint64_t)do_isr12, 0x08, 0x8E);
+    idt_set_gate(13, (uint64_t)do_isr13, 0x08, 0x8E);
+    idt_set_gate(14, (uint64_t)do_isr14, 0x08, 0x8E);
+    idt_set_gate(15, (uint64_t)do_isr15, 0x08, 0x8E);
+    idt_set_gate(16, (uint64_t)do_isr16, 0x08, 0x8E);
+    idt_set_gate(17, (uint64_t)do_isr17, 0x08, 0x8E);
+    idt_set_gate(18, (uint64_t)do_isr18, 0x08, 0x8E);
+    for (int i = 19; i < 31; i++)
+    {
+        idt_set_gate(i, (uint64_t)do_isr_reserved, 0x08, 0x8E);
+    }
     idt_set_gate(32, (uint64_t)do_irq0, 0x08, 0x8E);
     idt_set_gate(33, (uint64_t)do_irq1, 0x08, 0x8E);
 
