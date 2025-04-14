@@ -33,32 +33,40 @@ SECTIONS
     /* Move to the next memory page for .text */
     . = ALIGN(CONSTANT(MAXPAGESIZE));
 
+    _text_start = .;
     .text : {
         *(.text .text.*)
     } :text
+    _text_end = .;
 
     /* Move to the next memory page for .rodata */
     . = ALIGN(CONSTANT(MAXPAGESIZE));
 
+    _rodata_start = .;
     .rodata : {
         *(.rodata .rodata.*)
     } :rodata
+    _rodata_end = .;
 
     /* Move to the next memory page for .data */
     . = ALIGN(CONSTANT(MAXPAGESIZE));
 
+    _data_start = .;
     .data : {
         *(.data .data.*)
     } :data
+    _data_end = .;
 
     /* NOTE: .bss needs to be the last thing mapped to :data, otherwise lots of */
     /* unnecessary zeros will be written to the binary. */
     /* If you need, for example, .init_array and .fini_array, those should be placed */
     /* above this. */
+    _bss_start = .;
     .bss : {
         *(.bss .bss.*)
         *(COMMON)
     } :data
+    _bss_end = .;
 
     /* Discard .note.* and .eh_frame* since they may cause issues on some hosts. */
     /DISCARD/ : {

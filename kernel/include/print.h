@@ -20,6 +20,7 @@ extern uint8_t _binary_matrix_psf_size;
 static __attribute__((unused)) size_t cursor_x;
 static __attribute__((unused)) size_t cursor_y;
 
+char* u64toa_hex(uint64_t num, char *str);
 void init_framebuffer();
 void putchar(char c, uint32_t color);
 void screen_clear(void);

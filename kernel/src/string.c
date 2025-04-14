@@ -1,4 +1,5 @@
 #include <memory.h>
+#include <vmm.h>
 
 void *memcpy(void *dest, const void *src, size_t n) {
     char *d = (char *)dest;
@@ -222,25 +223,28 @@ char *strtok_r(char *str, const char *delim, char **saveptr) {
 }
 
 char *strdup(const char *s) {
-    size_t len = strlen(s) + 1;
-    void *new_str = allocate_page();
+    if (s == NULL) {
+        return NULL;
+    }
 
+    size_t len = strlen(s) + 1;
+    size_t num_pages_needed = (len + PAGE_SIZE - 1) / PAGE_SIZE;
+
+    void *new_str = allocate_page();
     if (new_str == NULL) {
         return NULL;
     }
 
-    size_t num_extra_pages = (len > PAGE_SIZE) ? ((len - PAGE_SIZE + PAGE_SIZE - 1) / PAGE_SIZE) : 0;
-
-    for(size_t i = 0; i < num_extra_pages; i++){
-        void* extra_page = allocate_page();
-        if(!extra_page) {
-             free_page(new_str);
-
-              for(size_t j = 0; j < i; j++){
-                  free_page((char*)new_str + (j+1) * PAGE_SIZE);
-              }
-              return NULL;
+    for (size_t i = 1; i < num_pages_needed; ++i) {
+        void *extra_page = allocate_page();
+        if (!extra_page) {
+            free_page(new_str);
+            for (size_t j = 1; j < i; ++j) {
+                free_page((char *)new_str + j * PAGE_SIZE);
+            }
+            return NULL;
         }
     }
+
     return (char *)memcpy(new_str, s, len);
 }

@@ -9,7 +9,8 @@ Arikoto is my personal Operating System development project that is inspired by 
 - 64-bit
 - UEFI + BIOS support
 - Limine boot protocol
-- Memory
+- Physical Memory
+- Virtual Memory
 - VFS/Ramdisk (not external yet)
 - CMake Build System
 - Keyboard
@@ -18,8 +19,9 @@ Arikoto is my personal Operating System development project that is inspired by 
 - IDT
 - PIC
 - Timer
-- ISR (Partial)
+- ISR
 - IRQ (Partial)
+- Paging
 
 ## Building
 

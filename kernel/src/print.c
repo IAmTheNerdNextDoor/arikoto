@@ -20,6 +20,27 @@ static size_t cursor_y = 0;
 static size_t screen_width = 0;
 static size_t screen_height = 0;
 
+char* u64toa_hex(uint64_t num, char *str) {
+    char buffer[17];
+    int i = 15;
+    buffer[16] = '\0';
+
+    if (num == 0) {
+        str[0] = '0';
+        str[1] = '\0';
+        return str;
+    }
+
+    while (num > 0 && i >= 0) {
+        int rem = num % 16;
+        buffer[i--] = (rem < 10) ? (rem + '0') : (rem - 10 + 'a');
+        num /= 16;
+    }
+
+    strcpy(str, &buffer[i + 1]);
+    return str;
+}
+
 void setup_framebuffer(uint32_t *fb, size_t p, size_t bpp_val, size_t width, size_t height) {
     framebuffer = fb;
     pitch = p;
@@ -85,6 +106,9 @@ void putchar(char c, uint32_t color) {
 }
 
 int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
+    if (!buffer || size == 0) return 0;
+
+    char *buf_start = buffer;
     char *buf = buffer;
     char *end = buffer + size - 1;
 
@@ -95,32 +119,59 @@ int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
         }
 
         fmt++;
+        if (*fmt == '\0') break;
 
         if (*fmt == '%') {
             *buf++ = *fmt++;
             continue;
         }
 
-        if (*fmt == 'd') {
-            int num = va_arg(args, int);
-            unsigned int u_num;
+        bool is_long_long = false;
+        if (*fmt == 'l') {
+            fmt++;
+            if (*fmt == 'l') {
+                is_long_long = true;
+                fmt++;
+            }
+        }
+
+        if (*fmt == 'd' || *fmt == 'i') {
+            long long num_ll = is_long_long ? va_arg(args, long long) : va_arg(args, int);
+            unsigned long long u_num;
             bool is_negative = false;
 
-            if (num < 0) {
+            if (num_ll < 0) {
                 is_negative = true;
-                u_num = (unsigned int)-num;
+                u_num = (unsigned long long)-num_ll;
             } else {
-                u_num = (unsigned int)num;
+                u_num = (unsigned long long)num_ll;
             }
-            if (is_negative && buf < end) {
-                *buf++ = '-';
-            }
-            char tmp[11];
+
+            char tmp[21];
             int i = 0;
             if (u_num == 0) {
                 tmp[i++] = '0';
             } else {
-                while (u_num > 0 && i < 10) {
+                while (u_num > 0 && i < 20) {
+                    tmp[i++] = (u_num % 10) + '0';
+                    u_num /= 10;
+                }
+            }
+
+            if (is_negative && buf < end) {
+                *buf++ = '-';
+            }
+            while (i-- > 0 && buf < end) {
+                *buf++ = tmp[i];
+            }
+        } else if (*fmt == 'u') {
+            unsigned long long u_num = is_long_long ? va_arg(args, unsigned long long) : va_arg(args, unsigned int);
+            char tmp[21];
+            int i = 0;
+            if (u_num == 0) {
+                tmp[i++] = '0';
+            } else {
+                while (u_num > 0 && i < 20) {
                     tmp[i++] = (u_num % 10) + '0';
                     u_num /= 10;
                 }
@@ -128,26 +179,49 @@ int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
             while (i-- > 0 && buf < end) {
                 *buf++ = tmp[i];
             }
-        }
-        else if (*fmt == 'x') {
-            unsigned int num = va_arg(args, unsigned int);
-            char tmp[9];
-            int i = 0;
-            int base = 16;
-
-            if (num == 0) {
+        } else if (*fmt == 'x') {
+             unsigned long long u_num = is_long_long ? va_arg(args, unsigned long long) : va_arg(args, unsigned int);
+             char tmp[17];
+             int i = 0;
+             if (u_num == 0) {
                 tmp[i++] = '0';
-            } else {
-                 while (num > 0 && i < 8) {
-                    tmp[i++] = "0123456789abcdef"[num % base];
-                    num /= base;
+             } else {
+                while (u_num > 0 && i < 16) {
+                    tmp[i++] = "0123456789abcdef"[u_num % 16];
+                    u_num /= 16;
                 }
-            }
-            while (i-- > 0 && buf < end) {
+             }
+             while (i-- > 0 && buf < end) {
                 *buf++ = tmp[i];
+             }
+        } else if (*fmt == 'X') {
+             unsigned long long u_num = is_long_long ? va_arg(args, unsigned long long) : va_arg(args, unsigned int);
+             char tmp[17];
+             int i = 0;
+             if (u_num == 0) {
+                tmp[i++] = '0';
+             } else {
+                 while (u_num > 0 && i < 16) {
+                    tmp[i++] = "0123456789ABCDEF"[u_num % 16];
+                    u_num /= 16;
+                 }
+             }
+             while (i-- > 0 && buf < end) {
+                 *buf++ = tmp[i];
+             }
+        } else if (*fmt == 'p') {
+            uintptr_t ptr_val = (uintptr_t)va_arg(args, void *);
+            char ptr_buf[17];
+            char full_buf[19];
+
+            u64toa_hex((uint64_t)ptr_val, ptr_buf);
+            strcat(full_buf, ptr_buf);
+
+            char *p = full_buf;
+            while (*p && buf < end) {
+                *buf++ = *p++;
             }
-        }
-        else if (*fmt == 's') {
+        } else if (*fmt == 's') {
             char *s = va_arg(args, char *);
             if (s == NULL) {
                 s = "(null)";
@@ -155,27 +229,19 @@ int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
             while (*s && buf < end) {
                 *buf++ = *s++;
             }
-        }
-         else if (*fmt == 'c') {
+        } else if (*fmt == 'c') {
             *buf++ = (char)va_arg(args, int);
-         }
-        else if (*fmt == 'C') {
-            if (buf < end - 1) {
-                *buf++ = '\x01';
-                *buf++ = (char)va_arg(args, int);
-            } else {
-                (void)va_arg(args, int);
-            }
         }
-        else {
-            if(buf < end) {
+         else {
+            *buf++ = '%';
+            if (buf < end) {
                 *buf++ = *fmt;
             }
-        }
+         }
         fmt++;
     }
     *buf = '\0';
-    return buf - buffer;
+    return buf - buf_start;
 }
 
 void printk(uint32_t default_color, const char *fmt, ...) {
