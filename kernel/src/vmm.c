@@ -37,7 +37,7 @@ static uint64_t *vmm_get_next_level(uint64_t *current_level, size_t index, bool 
 
     memset(next_level_virt, 0, PAGE_SIZE);
 
-    current_level[index] = (uint64_t)(uintptr_t)next_level_phys | PTE_PRESENT | PTE_WRITABLE | PTE_USER;
+    current_level[index] = (uint64_t)(uintptr_t)next_level_phys | PTE_PRESENT | PTE_WRITABLE;
 
     return next_level_virt;
 }
@@ -184,7 +184,7 @@ void init_vmm(void) {
         top = ALIGN_UP(top, PAGE_SIZE);
 
         for (uintptr_t p = base; p < top; p += PAGE_SIZE) {
-            if (!vmm_map_page(kernel_pagemap, p + VMM_HIGHER_HALF, p, PTE_PRESENT | PTE_WRITABLE | PTE_NX)) {
+            if (!vmm_map_page(kernel_pagemap, p + VMM_HIGHER_HALF, p, PTE_PRESENT | PTE_WRITABLE)) {
                  panic("PANIC: Failed to map HHDM page Phys: 0x%x Virt: 0x%x\n", p, p + VMM_HIGHER_HALF);
             }
         }
@@ -194,7 +194,7 @@ void init_vmm(void) {
             uintptr_t identity_top = top > IDENTITY_MAP_LIMIT ? IDENTITY_MAP_LIMIT : top;
             for (uintptr_t p = base; p < identity_top; p += PAGE_SIZE) {
                 if (p == 0) continue;
-                if (!vmm_map_page(kernel_pagemap, p, p, PTE_PRESENT | PTE_WRITABLE | PTE_NX)) {
+                if (!vmm_map_page(kernel_pagemap, p, p, PTE_PRESENT | PTE_WRITABLE)) {
                      panic("PANIC: Failed to identity map low page Phys: 0x%x\n", p);
                 }
             }

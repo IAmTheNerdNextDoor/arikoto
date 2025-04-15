@@ -71,7 +71,7 @@ do_irq0:
     cld
     call pit_irq_handler
 
-    mov dil, 1
+    mov dil, 0
     call pic_send_eoi
 
     pop r15
