@@ -418,6 +418,8 @@ static int cmd_raytrace() {
 	frame_buffer = (unsigned char *)fb_ptr;
 	int x, y;
 
+	offset = 0;
+
 	printk(COLOR_YELLOW, "Starting raytracer (rendering %d x %d)...\n", X, Y);
 
 	for (y=0; y<Y; y++)
