@@ -14,8 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       security-events: write
-      packages: read
-      actions: read
       contents: read
 
     strategy:
