@@ -18,3 +18,5 @@ uint64_t pit_get_elapsed_ms(void);
 void pit_irq_handler(void);
 
 void pit_sleep_ms(uint32_t ms);
+
+static __attribute__((unused)) uint32_t pit_frequency = 0;

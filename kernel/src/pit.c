@@ -3,7 +3,6 @@
 #include <pit.h>
 
 volatile uint64_t pit_ticks = 0;
-static uint32_t pit_frequency = 0;
 
 void pit_init(uint32_t frequency) {
     pit_frequency = frequency;
