@@ -9,6 +9,7 @@
 #include <pic.h>
 #include <pit.h>
 #include <vmm.h>
+#include <heap.h>
 
 /* Kernel main function */
 void kmain(void) {
@@ -36,6 +37,9 @@ void kmain(void) {
 
     /* Start VMM */
     init_vmm();
+
+    /* Start Heap */
+    init_heap();
 
     /* Start Keyboard */
     init_keyboard();

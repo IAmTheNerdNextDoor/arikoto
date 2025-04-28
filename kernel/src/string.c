@@ -1,5 +1,6 @@
 #include <memory.h>
 #include <vmm.h>
+#include <heap.h>
 
 void *memcpy(void *dest, const void *src, size_t n) {
     char *d = (char *)dest;
@@ -230,13 +231,13 @@ char *strdup(const char *s) {
     size_t len = strlen(s) + 1;
     size_t num_pages_needed = (len + PAGE_SIZE - 1) / PAGE_SIZE;
 
-    void *new_str = allocate_page();
+    char *new_str = kmalloc(len);
     if (new_str == NULL) {
         return NULL;
     }
 
     for (size_t i = 1; i < num_pages_needed; ++i) {
-        void *extra_page = allocate_page();
+        void *extra_page = kmalloc(len);
         if (!extra_page) {
             free_page(new_str);
             for (size_t j = 1; j < i; ++j) {

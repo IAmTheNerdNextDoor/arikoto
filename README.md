@@ -22,6 +22,7 @@ Arikoto is my personal Operating System development project that is inspired by 
 - ISR
 - IRQ (Partial)
 - Paging
+- Kernel Heap
 
 ## Building
 

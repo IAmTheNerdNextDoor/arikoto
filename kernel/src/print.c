@@ -1,6 +1,7 @@
 #include <print.h>
 #include <kernel.h>
 #include <request.h>
+#include <vmm.h>
 
 extern uint8_t _binary_matrix_psf_start;
 extern uint8_t _binary_matrix_psf_size;
@@ -51,7 +52,6 @@ void setup_framebuffer(uint32_t *fb, size_t p, size_t bpp_val, size_t width, siz
     cursor_y = 0;
 }
 
-/* Function to render a single character */
 void putchar(char c, uint32_t color) {
     if (c == '\n') {
         cursor_x = 0;
@@ -290,6 +290,10 @@ void init_framebuffer() {
     size_t bpp = framebuffer->bpp;
     size_t max_width = framebuffer->width;
     size_t max_height = framebuffer->height;
+
+    if ((uintptr_t)fb < VMM_HIGHER_HALF) {
+       fb = (uint32_t *)((uintptr_t)fb + VMM_HIGHER_HALF);
+    }
 
     setup_framebuffer(fb, pitch, bpp, max_width, max_height);
 }
