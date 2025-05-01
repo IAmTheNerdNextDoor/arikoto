@@ -63,6 +63,7 @@ static int cmd_divzero();
 static int cmd_uptime();
 static int cmd_raytrace();
 static int cmd_vfstest();
+static int cmd_changecolor(int argc, char **argv);
 
 void shell_init() {
     shell_register_command("help", cmd_help);
@@ -76,6 +77,7 @@ void shell_init() {
     shell_register_command("uptime", cmd_uptime);
     shell_register_command("raytrace", cmd_raytrace);
     shell_register_command("vfstest", cmd_vfstest);
+    shell_register_command("changecolor", cmd_changecolor);
 }
 
 static int parse_args(char *input, char **argv) {
@@ -161,6 +163,17 @@ static int cmd_echo(int argc, char **argv) {
 
 static int cmd_clear() {
     screen_clear();
+    return 0;
+}
+
+static int cmd_changecolor(int argc, char **argv) {
+    if (argc < 2) {
+        printk(COLOR_WHITE, "Usage: changecolor <hexcolor>\n");
+        return -1;
+    }
+    unsigned int color = parse_hex(argv[1]);
+    screen_color(color);
+    printk(COLOR_WHITE, "Set shell color to 0x%x\n", color);
     return 0;
 }
 

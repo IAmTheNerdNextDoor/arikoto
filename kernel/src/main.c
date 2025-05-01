@@ -14,7 +14,7 @@
 /* Kernel main function */
 void kmain(void) {
     /* Start PIT */
-    pit_init(100);
+    pit_init(10000);
 
     /* Start Framebuffer */
     init_framebuffer();

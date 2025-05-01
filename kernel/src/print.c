@@ -6,6 +6,8 @@
 extern uint8_t _binary_matrix_psf_start;
 extern uint8_t _binary_matrix_psf_size;
 
+int screencolor;
+
 /* PSF1 font header structure. */
 struct psf1_header {
     uint8_t magic[2];
@@ -67,7 +69,7 @@ void putchar(char c, uint32_t color) {
             for (size_t py = 0; py < 16; py++) {
                 for (size_t px = 0; px < 8; px++) {
                     size_t pixel_index = (cursor_y + py) * (pitch / (bpp / 8)) + (cursor_x + px);
-                    framebuffer[pixel_index] = COLOR_BLACK;
+                    framebuffer[pixel_index] = screencolor;
                 }
             }
         }
@@ -81,7 +83,7 @@ void putchar(char c, uint32_t color) {
     for (size_t py = 0; py < font->charsize; py++) {
         for (size_t px = 0; px < 8; px++) {
             size_t pixel_index = (cursor_y + py) * (pitch / (bpp / 8)) + (cursor_x + px);
-            framebuffer[pixel_index] = COLOR_BLACK;
+            framebuffer[pixel_index] = screencolor;
         }
     }
 
@@ -272,8 +274,25 @@ void screen_clear(void) {
     size_t total_pixels = (pitch / (bpp / 8)) * screen_height;
 
     for (size_t i = 0; i < total_pixels; i++) {
-        framebuffer[i] = COLOR_BLACK;
+        framebuffer[i] = screencolor;
     }
+
+    cursor_x = 0;
+    cursor_y = 0;
+}
+
+void screen_color(int color) {
+    if (framebuffer == NULL) {
+        return;
+    }
+
+    size_t total_pixels = (pitch / (bpp / 8)) * screen_height;
+
+    for (size_t i = 0; i < total_pixels; i++) {
+        framebuffer[i] = color;
+    }
+
+    screencolor = color;
 
     cursor_x = 0;
     cursor_y = 0;
@@ -296,4 +315,6 @@ void init_framebuffer() {
     }
 
     setup_framebuffer(fb, pitch, bpp, max_width, max_height);
+
+    screen_color(0x182028);
 }

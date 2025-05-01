@@ -24,5 +24,6 @@ char* u64toa_hex(uint64_t num, char *str);
 void init_framebuffer();
 void putchar(char c, uint32_t color);
 void screen_clear(void);
+void screen_color(int color);
 int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args);
 void printk(uint32_t color, const char *fmt, ...);

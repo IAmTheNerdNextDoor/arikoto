@@ -126,5 +126,22 @@ static __attribute__((unused)) size_t build_string(char *buffer, size_t size, ..
     return pos;
 }
 
+static __attribute__((unused)) unsigned int parse_hex(const char *s) {
+    unsigned int result = 0;
+    if (s[0] == '0' && (s[1] == 'x' || s[1] == 'X')) s += 2;
+    while (*s) {
+        char c = *s++;
+        if (c >= '0' && c <= '9')
+            result = (result << 4) | (c - '0');
+        else if (c >= 'a' && c <= 'f')
+            result = (result << 4) | (c - 'a' + 10);
+        else if (c >= 'A' && c <= 'F')
+            result = (result << 4) | (c - 'A' + 10);
+        else
+            break;
+    }
+    return result;
+}
+
 void panic(const char *fmt, ...);
 void print_logo_and_tagline();
