@@ -2,6 +2,7 @@
 #include <kernel.h>
 #include <request.h>
 #include <vmm.h>
+#include <stdarg.h>
 
 extern uint8_t _binary_matrix_psf_start;
 extern uint8_t _binary_matrix_psf_size;
@@ -244,6 +245,14 @@ int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
     }
     *buf = '\0';
     return buf - buf_start;
+}
+
+int snprintf(char *buffer, size_t size, const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    int ret = vsnprintf(buffer, size, fmt, args);
+    va_end(args);
+    return ret;
 }
 
 void printk(uint32_t default_color, const char *fmt, ...) {

@@ -26,4 +26,5 @@ void putchar(char c, uint32_t color);
 void screen_clear(void);
 void screen_color(int color);
 int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args);
+int snprintf(char *buffer, size_t size, const char *fmt, ...);
 void printk(uint32_t color, const char *fmt, ...);

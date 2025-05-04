@@ -1,63 +1,60 @@
-#include <stdint.h>
+#include <gdt.h>
+#include <string.h>
 
-struct gdt_entry {
-    uint16_t limit_low;          /* Lower 16 bits of the segment limit */
-    uint16_t base_low;           /* Lower 16 bits of the segment base address */
-    uint8_t base_middle;         /* Next 8 bits of the segment base address */
-    uint8_t access;              /* Access flags (read/write, execute, etc) */
-    uint8_t granularity;         /* Granularity flags (limit size, etc) */
-    uint8_t base_high;           /* Upper 8 bits of the segment base address */
-} __attribute__((packed));
+struct __attribute__((packed)) TSS {
+    uint32_t reserved0;
+    uint64_t rsp0;
+    uint64_t rsp1, rsp2;
+    uint64_t reserved1;
+    uint64_t ist[7];
+    uint64_t reserved2;
+    uint16_t reserved3, io_map_base;
+} tss;
 
-struct gdt_ptr {
-    uint16_t limit;
-    uint64_t base;
-} __attribute__((packed));
+struct GDTEntry { uint16_t lo_lim, lo_base; uint8_t mid_base, access, flags_hi, hi_base; } __attribute__((packed));
+struct GDTPtr   { uint16_t limit; uint64_t base; } __attribute__((packed));
 
-struct gdt_entry gdt[3];
-struct gdt_ptr gdtp;
+static struct GDTEntry gdt[5];
+static struct GDTPtr   gdtp;
 
-void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char granularity) {
-    gdt[num].base_low = base & 0xFFFF;                   /* Lower 16 bits of base */
-    gdt[num].base_middle = (base >> 16) & 0xFF;          /* Middle 8 bits of base */
-    gdt[num].base_high = (base >> 24) & 0xFF;            /* Upper 8 bits of base */
-    gdt[num].limit_low = limit & 0xFFFF;                 /* Lower 16 bits of limit */
-    gdt[num].granularity = (limit >> 16) & 0x0F;         /* Higher 4 bits of limit */
-    gdt[num].granularity |= granularity & 0xF0;          /* Granularity flags */
-    gdt[num].access = access;                            /* Access flags (code/data/privilege) */
+static void gdt_set(int i, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags){
+    gdt[i].lo_base   = base & 0xFFFF;
+    gdt[i].mid_base  = (base>>16)&0xFF;
+    gdt[i].hi_base   = (base>>24)&0xFF;
+    gdt[i].lo_lim    = limit & 0xFFFF;
+    gdt[i].flags_hi  = ((limit>>16)&0x0F) | (flags & 0xF0);
+    gdt[i].access    = access;
 }
 
-void init_gdt() {
-    gdtp.limit = (sizeof(struct gdt_entry) * 3) - 1;
-    gdtp.base = (uint64_t)&gdt;
+static void gdt_set_tss(int i, uint64_t base, uint32_t limit){
+    gdt_set(i, base, limit, 0x89, 0x00);
+    uint32_t *hi = (uint32_t*)&gdt[i+1];
+    hi[0] = base >> 32;
+    hi[1] = 0;
+}
 
-    gdt_set_gate(0, 0, 0, 0, 0);                     /* Null descriptor */
-    gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xA0);      /* 64-bit code segment (L flag set, executable) */
-    gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xC0);      /* 64-bit data segment (non-executable) */
+void init_gdt_tss(void){
+    memset(&gdt,0,sizeof(gdt));
+    memset(&tss,0,sizeof(tss));
+    gdt_set(0,0,0,0,0);
+    gdt_set(1,0,0xFFFFF,0x9A,0xA0);
+    gdt_set(2,0,0xFFFFF,0x92,0xC0);
+    gdt_set_tss(3, (uint64_t)&tss, sizeof(tss)-1);
 
-    /*
-    * gdt_flush I had originally planned but since nasm wasn't
-    * cooperating with me, I moved it to inline assembly instead.
-    */
-    asm volatile (
-        "lea %[gdtp], %%rax\n\t"
-        "lgdt (%%rax)\n\t"
-
+    gdtp.limit = sizeof(gdt)-1;
+    gdtp.base  = (uint64_t)&gdt;
+    asm volatile("lgdt %0"::"m"(gdtp));
+    asm volatile(
         "mov $0x10, %%ax\n\t"
         "mov %%ax, %%ds\n\t"
         "mov %%ax, %%es\n\t"
-        "mov %%ax, %%fs\n\t"
-        "mov %%ax, %%gs\n\t"
         "mov %%ax, %%ss\n\t"
-
         "pushq $0x08\n\t"
-        "lea 1f(%%rip), %%rax\n\t"
+        "lea 1f(%%rip),%%rax\n\t"
         "pushq %%rax\n\t"
         "retfq\n\t"
-
         "1:\n\t"
-        :
-        : [gdtp] "m"(gdtp)
-        : "rax", "memory"
+        :::"rax"
     );
+    asm volatile("ltr %%ax"::"a"(0x18));
 }

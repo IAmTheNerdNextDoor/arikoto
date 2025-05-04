@@ -1,0 +1,6 @@
+Hello, Arikoto!
+
+This is the cpio external ramdisk!
+
+greetz @klange for ToaruOS (https://github.com/klange/toaruos), @malwarepad for cavOS (https://github.com/malwarepad/cavOS)
+both are great OSDev projects and you should really check them out

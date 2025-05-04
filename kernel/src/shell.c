@@ -7,6 +7,7 @@
 #include <serial.h>
 #include <pit.h>
 #include <request.h>
+#include <multitask.h>
 
 #define MAX_COMMANDS 32
 #define MAX_ARGS 16
@@ -40,6 +41,8 @@ char *shell_readline(const char *prompt) {
                 line_buffer[pos++] = c;
                 putchar(c, COLOR_WHITE);
             }
+        } else if (c == '\0') {
+            schedule();
         }
     }
 }
@@ -91,6 +94,18 @@ static int parse_args(char *input, char **argv) {
 
     argv[argc] = NULL;
     return argc;
+}
+
+static void shell_make_absolute(const char *in, char *out, size_t outsize) {
+    if (in[0] == '/') {
+        strncpy(out, in, outsize-1);
+        out[outsize-1] = 0;
+        return;
+    }
+    while (in[0] == '.' && in[1] == '/') in += 2;
+    out[0] = '/';
+    strncpy(out+1, in, outsize-2);
+    out[outsize-1] = 0;
 }
 
 void shell_run() {
@@ -178,9 +193,11 @@ static int cmd_changecolor(int argc, char **argv) {
 }
 
 static int cmd_ls(int argc, char **argv) {
+    char abspath[256];
     const char *path_to_list = "/";
     if (argc > 1) {
-        path_to_list = argv[1];
+        shell_make_absolute(argv[1], abspath, sizeof(abspath));
+        path_to_list = abspath;
     }
 
     char list_buffer[2048];
@@ -217,10 +234,10 @@ static int cmd_cat(int argc, char **argv) {
         printk(COLOR_YELLOW, "Usage: cat <filename>\n");
         return -1;
     }
-
+    char abspath[256];
+    shell_make_absolute(argv[1], abspath, sizeof(abspath));
     char read_buffer[1025];
-    int bytes_read;
-    bytes_read = vfs_read(argv[1], read_buffer, sizeof(read_buffer) - 1, 0);
+    int bytes_read = vfs_read(abspath, read_buffer, sizeof(read_buffer) - 1, 0);
 
     if (bytes_read >= 0) {
         read_buffer[bytes_read] = '\0';
@@ -503,4 +520,10 @@ static int cmd_vfstest() {
     vfs_test();
 
     return 0;
+}
+
+void shell_task() {
+    shell_init();
+    shell_run();
+    task_exit();
 }

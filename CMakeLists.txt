@@ -20,12 +20,29 @@ add_custom_target(ovmf-setup
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+set(INITRD_SRC "${CMAKE_SOURCE_DIR}/initrd")
+set(INITRD_IMG "${CMAKE_BINARY_DIR}/initrd.img")
+set(MAKEINITRD_PY "${CMAKE_SOURCE_DIR}/utils/makeinitrd.py")
+file(GLOB_RECURSE INITRD_FILES CONFIGURE_DEPENDS "${INITRD_SRC}/*")
+
+add_custom_command(
+    OUTPUT ${INITRD_IMG}
+    COMMAND ${CMAKE_COMMAND} -E echo "Building initrd.img from ${INITRD_SRC}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${INITRD_SRC}
+    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_SOURCE_DIR}/utils python3 ${MAKEINITRD_PY}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    DEPENDS ${MAKEINITRD_PY} ${INITRD_FILES}
+    COMMENT "Generating initrd.img using makeinitrd.py"
+)
+add_custom_target(initrd ALL DEPENDS ${INITRD_IMG})
+
 # ISO creation
 add_custom_target(iso
-    DEPENDS kernel limine-setup
+    DEPENDS kernel limine-setup initrd
     COMMAND ${CMAKE_COMMAND} -E remove_directory iso_root
     COMMAND ${CMAKE_COMMAND} -E make_directory iso_root/boot iso_root/boot/limine iso_root/EFI/BOOT
     COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/kernel/arikoto iso_root/boot/
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/initrd.img iso_root/boot/
     COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_SOURCE_DIR}/limine.conf
         ${CMAKE_SOURCE_DIR}/limine/limine-bios.sys

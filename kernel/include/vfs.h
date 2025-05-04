@@ -41,5 +41,8 @@ int vfs_create(const char *path, const char *data);
 int vfs_read(const char *path, char *buffer, size_t size, size_t offset);
 int vfs_delete(const char *path);
 int init_ramdisk(struct vfs_file_init *files, size_t num_files, const char* mount_path);
+int vfs_mount_initramfs(const char *mount_path, void *initramfs_addr, size_t initramfs_size);
+
+extern struct vfs_operations initramfs_ops;
 
 extern struct vfs_operations ramdisk_ops;

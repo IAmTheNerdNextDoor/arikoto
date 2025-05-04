@@ -27,3 +27,10 @@ volatile struct limine_executable_address_request kernel_address_request = {
     .id = LIMINE_EXECUTABLE_ADDRESS_REQUEST,
     .revision = 0
 };
+
+/* Module request */
+__attribute__((used, section(".limine_requests")))
+volatile struct limine_module_request module_request = {
+    .id = LIMINE_MODULE_REQUEST,
+    .revision = 0
+};

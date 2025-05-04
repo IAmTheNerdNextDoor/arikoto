@@ -1,3 +1,5 @@
 #pragma once
 
-void init_gdt();
+#include <stdint.h>
+
+void init_gdt_tss();

@@ -1,6 +1,7 @@
 #include <serial.h>
 #include <pic.h>
 #include <pit.h>
+#include <multitask.h>
 
 volatile uint64_t pit_ticks = 0;
 
@@ -36,6 +37,7 @@ uint64_t pit_get_elapsed_ms(void) {
 
 void pit_irq_handler(void) {
     pit_ticks++;
+    task_timer_tick();
 }
 
 void pit_sleep_ms(uint32_t ms) {
