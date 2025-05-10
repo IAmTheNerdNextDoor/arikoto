@@ -1,5 +1,5 @@
 # Arikoto (ありこと)
-[![CodeQL Runner](https://github.com/AFellowSpeedrunner/arikoto/actions/workflows/codeql.yml/badge.svg)](https://github.com/AFellowSpeedrunner/arikoto/actions/workflows/codeql.yml) ![loc](https://tokei.rs/b1/github/IAmTheNerdNextDoor/arikoto) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/2a1ccae8876849b0bf4a1ec9cc105450)]() [![justforfunnoreally.dev badge](https://img.shields.io/badge/justforfunnoreally-dev-9ff)](https://justforfunnoreally.dev)
+[![CodeQL Runner](https://github.com/AFellowSpeedrunner/arikoto/actions/workflows/codeql.yml/badge.svg)](https://github.com/AFellowSpeedrunner/arikoto/actions/workflows/codeql.yml) ![loc](https://tokei.rs/b1/github/IAmTheNerdNextDoor/arikoto) [![justforfunnoreally.dev badge](https://img.shields.io/badge/justforfunnoreally-dev-9ff)](https://justforfunnoreally.dev)
 
 Arikoto is my personal Operating System development project that is inspired by and is aiming to have a similar nature to [ToaruOS](https://github.com/klange/toaruos).
 
