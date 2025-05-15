@@ -3,7 +3,7 @@ project(arikoto LANGUAGES C ASM)
 
 # Settings
 set(IMAGENAME "arikoto")
-set(QEMUFLAGS -m 2G)
+set(QEMUFLAGS -m 2G -serial stdio)
 
 # Add kernel subdirectory
 add_subdirectory(${CMAKE_SOURCE_DIR}/kernel ${CMAKE_BINARY_DIR}/kernel)

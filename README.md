@@ -25,6 +25,7 @@ Arikoto is my personal Operating System development project that is inspired by 
 - Paging
 - Kernel Heap
 - Preemptive Scheduling
+- Serial printing
 
 ## Building
 

@@ -11,11 +11,15 @@
 #include <vmm.h>
 #include <heap.h>
 #include <multitask.h>
+#include <serial.h>
 
 /* Kernel main function */
 void kmain(void) {
     /* Start PIT */
     pit_init(10000);
+
+    /* Start Serial */
+    init_serial();
 
     /* Start Framebuffer */
     init_framebuffer();
@@ -57,7 +61,7 @@ void kmain(void) {
         printk(COLOR_YELLOW, "No initramfs module found.\n");
     }
 
-    /* Initialize multitasking */
+    /* Start Multitasking */
     init_multitasking();
 
     task_create(shell_task, NULL, "shell", 1);
