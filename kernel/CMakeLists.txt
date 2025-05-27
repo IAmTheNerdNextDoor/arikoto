@@ -78,5 +78,6 @@ target_link_options(kernel PRIVATE
     -static
     -z max-page-size=0x1000
     -Wl,--gc-sections
+    -Wl,-z,noexecstack
     -T ${CMAKE_CURRENT_SOURCE_DIR}/linker.ld
 )

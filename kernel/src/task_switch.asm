@@ -43,5 +43,3 @@ task_switch_asm:
     popfq
 
     ret
-
-section .note.GNU-stack noalloc noexec nowrite progbits

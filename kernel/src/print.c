@@ -175,7 +175,6 @@ int vsnprintf(char *buffer, size_t size, const char *fmt, va_list args) {
         int conv_len = 0;
 
         if (*fmt == 'd' || *fmt == 'i') {
-            char *p_conv = conv_buf;
             long long num_ll = is_long_long ? va_arg(args, long long) : va_arg(args, int);
             unsigned long long u_val;
             bool is_negative = false;
