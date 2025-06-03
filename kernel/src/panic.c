@@ -5,13 +5,20 @@
 void panic(const char *fmt, ...) {
     asm volatile ("cli");
     screen_clear();
-    printk(COLOR_RED, "****************************************\n");
-    printk(COLOR_RED, "              KERNEL PANIC\n");
-    printk(COLOR_RED, "****************************************\n");
+    printk(COLOR_RED,
+        "+======================================================================================================+\n"
+        "| ##    ## ######## ########  ##    ## ######## ##          ########     ###    ##    ## ####  ######  |\n"
+        "| ##   ##  ##       ##     ## ###   ## ##       ##          ##     ##   ## ##   ###   ##  ##  ##    ## |\n"
+        "| ##  ##   ##       ##     ## ####  ## ##       ##          ##     ##  ##   ##  ####  ##  ##  ##       |\n"
+        "| #####    ######   ########  ## ## ## ######   ##          ########  ##     ## ## ## ##  ##  ##       |\n"
+        "| ##  ##   ##       ##   ##   ##  #### ##       ##          ##        ######### ##  ####  ##  ##       |\n"
+        "| ##   ##  ##       ##    ##  ##   ### ##       ##          ##        ##     ## ##   ###  ##  ##    ## |\n"
+        "| ##    ## ######## ##     ## ##    ## ######## ########    ##        ##     ## ##    ## ####  ######  |\n"
+        "+======================================================================================================+\n\n");
 
 
-    printk(COLOR_WHITE, "Arikoto has panicked. If this occurs frequently and you didn't cause this intentionally, please submit it on GitHub.\n\n");
-    char panic_buffer[1024];
+    printk(COLOR_WHITE, "Arikoto has encountered a fatal exception.\n\n");
+    char panic_buffer[4096];
     va_list args;
     va_start(args, fmt);
     vsnprintf(panic_buffer, sizeof(panic_buffer), fmt, args);

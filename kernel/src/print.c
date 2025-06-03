@@ -313,7 +313,7 @@ int snprintf(char *buffer, size_t size, const char *fmt, ...) {
 }
 
 void printk(uint32_t default_color, const char *fmt, ...) {
-    char buffer[1024];
+    char buffer[4096];
     va_list args;
     va_start(args, fmt);
     vsnprintf(buffer, sizeof(buffer), fmt, args);
