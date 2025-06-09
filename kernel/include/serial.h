@@ -19,3 +19,4 @@ void init_serial(void);
 void serial_putchar(char a);
 void serial_puts(const char *s);
 bool is_serial_initialized(void);
+char serial_try_getchar();

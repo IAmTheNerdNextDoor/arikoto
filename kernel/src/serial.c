@@ -47,3 +47,25 @@ void init_serial() {
 bool is_serial_initialized(void) {
     return g_serial_initialized;
 }
+
+static int serial_received() {
+    return inb(COM1_PORT + 5) & 1;
+}
+
+char serial_getchar() {
+    if (!g_serial_initialized) return 0;
+
+    while (serial_received() == 0) {
+        io_wait();
+    }
+
+    return inb(COM1_PORT);
+}
+
+char serial_try_getchar() {
+    if (!g_serial_initialized) return 0;
+    if (inb(COM1_PORT + 5) & 1) {
+        return inb(COM1_PORT);
+    }
+    return 0;
+}

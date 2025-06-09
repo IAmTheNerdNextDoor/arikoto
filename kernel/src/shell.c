@@ -25,15 +25,26 @@ char *shell_readline(const char *prompt) {
     int pos = 0;
 
     while (1) {
-        char c = keyboard_read();
+        char c = 0;
 
-        if (c == '\n') {
+        char kbd_c = keyboard_read();
+        char ser_c = serial_try_getchar();
+
+        if (kbd_c != 0) {
+            c = kbd_c;
+        } else if (ser_c != 0) {
+            c = ser_c;
+        }
+
+        if (c == '\n' || c == '\r') {
             line_buffer[pos] = '\0';
             putchar('\n', COLOR_WHITE);
             return line_buffer;
-        } else if (c == '\b') {
+        } else if (c == '\b' || c == 127) {
             if (pos > 0) {
                 pos--;
+                putchar('\b', COLOR_WHITE);
+                putchar(' ', COLOR_WHITE);
                 putchar('\b', COLOR_WHITE);
             }
         } else if (c >= ' ' && c <= '~') {
@@ -41,7 +52,7 @@ char *shell_readline(const char *prompt) {
                 line_buffer[pos++] = c;
                 putchar(c, COLOR_WHITE);
             }
-        } else if (c == '\0') {
+        } else if (c == 0) {
             schedule();
         }
     }
