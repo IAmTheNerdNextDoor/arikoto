@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <string.h>
+#include <misc/string.h>
 
 /* Halt and catch fire function (obvious) */
 static inline __attribute__((unused)) void hcf(void) {

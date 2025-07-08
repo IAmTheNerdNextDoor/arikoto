@@ -1,5 +1,5 @@
-#include <serial.h>
-#include <pic.h>
+#include <misc/serial.h>
+#include <arch/x86_64/pic.h>
 #include <stdbool.h>
 
 #define COM1_PORT 0x3F8

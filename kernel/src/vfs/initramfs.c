@@ -1,7 +1,7 @@
-#include <vfs.h>
-#include <kernel.h>
-#include <string.h>
-#include <heap.h>
+#include <vfs/vfs.h>
+#include <misc/kernel.h>
+#include <misc/string.h>
+#include <misc/heap.h>
 #include <stdbool.h>
 #include <stdint.h>
 

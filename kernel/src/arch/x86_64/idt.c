@@ -1,6 +1,6 @@
-#include <isr.h>
-#include <irq.h>
-#include <serial.h>
+#include <arch/x86_64/isr.h>
+#include <arch/x86_64/irq.h>
+#include <misc/serial.h>
 
 struct idt_entry {
     uint16_t isr_low;   /* Lower 16 bits of ISR */

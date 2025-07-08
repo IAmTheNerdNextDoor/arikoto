@@ -1,6 +1,6 @@
-#include <vfs.h>
-#include <print.h>
-#include <string.h>
+#include <vfs/vfs.h>
+#include <misc/print.h>
+#include <misc/string.h>
 #include <stdbool.h>
 
 static bool check_result(int result, int expected, const char* test_name) {

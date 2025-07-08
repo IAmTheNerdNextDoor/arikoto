@@ -1,10 +1,10 @@
-#include <vmm.h>
-#include <memory.h>
-#include <request.h>
-#include <kernel.h>
-#include <string.h>
-#include <print.h>
-#include <spinlock.h>
+#include <arch/x86_64/vmm.h>
+#include <arch/x86_64/memory.h>
+#include <arch/x86_64/request.h>
+#include <misc/kernel.h>
+#include <misc/string.h>
+#include <misc/print.h>
+#include <arch/x86_64/spinlock.h>
 
 extern uint8_t _text_start[], _text_end[];
 extern uint8_t _rodata_start[], _rodata_end[];

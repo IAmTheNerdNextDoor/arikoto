@@ -1,7 +1,7 @@
-#include <keyboard.h>
-#include <serial.h>
-#include <pic.h>
-#include <pit.h>
+#include <misc/keyboard.h>
+#include <misc/serial.h>
+#include <arch/x86_64/pic.h>
+#include <arch/x86_64/pit.h>
 
 #define PS2_DATA_PORT    0x60
 #define PS2_STATUS_PORT  0x64

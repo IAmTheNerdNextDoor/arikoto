@@ -1,11 +1,10 @@
-#include <multitask.h>
-#include <heap.h>
-#include <kernel.h>
-#include <string.h>
-#include <pit.h>
-#include <pic.h>
-#include <gdt.h>
-#include <spinlock.h>
+#include <misc/multitask.h>
+#include <misc/heap.h>
+#include <misc/kernel.h>
+#include <misc/string.h>
+#include <arch/x86_64/pit.h>
+#include <arch/x86_64/pic.h>
+#include <arch/x86_64/spinlock.h>
 
 static task_t* task_list_head = NULL;
 static task_t* task_list_tail = NULL;
@@ -269,9 +268,7 @@ void task_exit(void) {
 
     schedule();
 
-    while (1) {
-        asm volatile("hlt");
-    }
+    hcf();
 }
 
 void task_timer_tick(void) {

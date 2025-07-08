@@ -1,6 +1,6 @@
-#include <kernel.h>
-#include <print.h>
-#include <shell.h>
+#include <misc/kernel.h>
+#include <misc/print.h>
+#include <misc/shell.h>
 
 void panic(const char *fmt, ...) {
     asm volatile ("cli");

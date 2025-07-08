@@ -1,9 +1,9 @@
-#include <print.h>
-#include <kernel.h>
-#include <request.h>
-#include <vmm.h>
+#include <misc/print.h>
+#include <misc/kernel.h>
+#include <arch/x86_64/request.h>
+#include <arch/x86_64/vmm.h>
 #include <stdarg.h>
-#include <serial.h>
+#include <misc/serial.h>
 
 extern uint8_t _binary_matrix_psf_start;
 extern uint8_t _binary_matrix_psf_size;

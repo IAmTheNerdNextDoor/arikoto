@@ -1,8 +1,8 @@
-#include <kernel.h>
+#include <misc/kernel.h>
 #include <stdint.h>
-#include <print.h>
-#include <vmm.h>
-#include <memory.h>
+#include <misc/print.h>
+#include <arch/x86_64/vmm.h>
+#include <arch/x86_64/memory.h>
 
 void isr0() {
     panic("PANIC: Division by zero exception\n");

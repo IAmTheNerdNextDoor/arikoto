@@ -1,13 +1,13 @@
-#include <shell.h>
-#include <keyboard.h>
-#include <print.h>
-#include <memory.h>
-#include <vfs.h>
-#include <kernel.h>
-#include <serial.h>
-#include <pit.h>
-#include <request.h>
-#include <multitask.h>
+#include <misc/shell.h>
+#include <misc/keyboard.h>
+#include <misc/print.h>
+#include <arch/x86_64/memory.h>
+#include <vfs/vfs.h>
+#include <misc/kernel.h>
+#include <misc/serial.h>
+#include <arch/x86_64/pit.h>
+#include <arch/x86_64/request.h>
+#include <misc/multitask.h>
 
 #define MAX_COMMANDS 32
 #define MAX_ARGS 16

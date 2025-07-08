@@ -1,6 +1,6 @@
-#include <vfs.h>
-#include <kernel.h>
-#include <string.h>
+#include <vfs/vfs.h>
+#include <misc/kernel.h>
+#include <misc/string.h>
 
 struct ramdisk_file {
     char name[MAX_FILE_NAME_LENGTH];

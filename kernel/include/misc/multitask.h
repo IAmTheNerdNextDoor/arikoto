@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <memory.h>
+#include <arch/x86_64/memory.h>
 
 #define TASK_STATE_INVALID    0
 #define TASK_STATE_ACTIVE     1

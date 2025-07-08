@@ -1,7 +1,7 @@
-#include <serial.h>
-#include <pic.h>
-#include <pit.h>
-#include <multitask.h>
+#include <misc/serial.h>
+#include <arch/x86_64/pic.h>
+#include <arch/x86_64/pit.h>
+#include <misc/multitask.h>
 
 volatile uint64_t pit_ticks = 0;
 

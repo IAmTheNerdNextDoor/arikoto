@@ -1,6 +1,6 @@
-#include <memory.h>
-#include <vmm.h>
-#include <heap.h>
+#include <arch/x86_64/memory.h>
+#include <arch/x86_64/vmm.h>
+#include <misc/heap.h>
 
 void *memcpy(void *dest, const void *src, size_t n) {
     char *d = (char *)dest;

@@ -1,17 +1,17 @@
-#include <kernel.h>
-#include <print.h>
-#include <memory.h>
-#include <vfs.h>
-#include <keyboard.h>
-#include <shell.h>
-#include <gdt.h>
-#include <idt.h>
-#include <pic.h>
-#include <pit.h>
-#include <vmm.h>
-#include <heap.h>
-#include <multitask.h>
-#include <serial.h>
+#include <misc/kernel.h>
+#include <misc/print.h>
+#include <arch/x86_64/memory.h>
+#include <vfs/vfs.h>
+#include <misc/keyboard.h>
+#include <misc/shell.h>
+#include <arch/x86_64/gdt.h>
+#include <arch/x86_64/idt.h>
+#include <arch/x86_64/pic.h>
+#include <arch/x86_64/pit.h>
+#include <arch/x86_64/vmm.h>
+#include <misc/heap.h>
+#include <misc/multitask.h>
+#include <misc/serial.h>
 
 /* Kernel main function */
 void kmain(void) {

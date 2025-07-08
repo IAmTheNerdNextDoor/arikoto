@@ -1,4 +1,4 @@
-#include <print.h>
+#include <misc/print.h>
 
 void print_logo_and_tagline() {
     printk(COLOR_BLUE, "   _|_|              _|  _|                    _|                \n");
