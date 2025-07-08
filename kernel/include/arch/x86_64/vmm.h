@@ -32,7 +32,6 @@ typedef struct {
 } pagemap_t;
 
 extern pagemap_t *kernel_pagemap;
-extern pagemap_t *userspace_pagemap;
 
 #define VMM_HIGHER_HALF (hhdm_request.response->offset)
 
@@ -45,7 +44,3 @@ bool vmm_map_page(pagemap_t *pagemap, uintptr_t virt_addr, uintptr_t phys_addr, 
 bool vmm_unmap_page(pagemap_t *pagemap, uintptr_t virt_addr);
 
 uintptr_t vmm_virt_to_phys(pagemap_t *pagemap, uintptr_t virt_addr);
-
-void init_userspace_pagemap(void);
-
-bool create_userspace_page_tables(void);
