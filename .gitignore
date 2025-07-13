@@ -3,4 +3,4 @@
 /build
 kernel/freestnd-c-hdrs-0bsd
 kernel/cc-runtime
-/kernel/include/limine.h
+/kernel/limine-protocol

@@ -34,8 +34,9 @@ add_compile_options(
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/freestnd-c-hdrs-0bsd
+    ${CMAKE_CURRENT_SOURCE_DIR}/freestnd-c-hdrs-0bsd/include
     ${CMAKE_CURRENT_SOURCE_DIR}/cc-runtime
+    ${CMAKE_CURRENT_SOURCE_DIR}/limine-protocol/include
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -61,7 +62,7 @@ endforeach()
 
 # More preventing of recloning
 add_custom_target(kernel-deps
-    COMMAND test -d freestnd-c-hdrs-0bsd -a -d cc-runtime -a -f include/limine.h || ./get-deps
+    COMMAND test -d freestnd-c-hdrs-0bsd -a -d cc-runtime -a -d limine-protocol || ./get-deps
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
