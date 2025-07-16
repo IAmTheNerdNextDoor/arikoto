@@ -53,6 +53,8 @@ void init_heap(void) {
     free_list_head->next = NULL;
 
     spinlock_release(&heap_lock);
+
+    printk(COLOR_GREEN, "Heap installed\n");
 }
 
 void *kmalloc(size_t size) {

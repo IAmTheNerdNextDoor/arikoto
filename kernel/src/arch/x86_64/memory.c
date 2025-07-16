@@ -154,6 +154,8 @@ void init_pmm() {
     used_pages = total_ram_pages - free_pages;
 
     spinlock_release(&pmm_lock);
+
+    printk(COLOR_GREEN, "PMM installed\n");
 }
 
 void *allocate_page() {

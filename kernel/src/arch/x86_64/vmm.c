@@ -295,4 +295,5 @@ void init_vmm(void) {
         }
     }
     vmm_switch_to(kernel_pagemap);
+    printk(COLOR_GREEN, "VMM installed\n");
 }

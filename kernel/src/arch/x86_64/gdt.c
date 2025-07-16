@@ -1,5 +1,6 @@
 #include <arch/x86_64/gdt.h>
 #include <misc/string.h>
+#include <misc/print.h>
 
 __attribute__((aligned(16)))
 uint8_t kernel_stack[KERNEL_STACK_SIZE];
@@ -61,6 +62,7 @@ void init_gdt_tss(void) {
 
     gdtp.limit = sizeof(gdt) - 1;
     gdtp.base  = (uint64_t)&gdt;
+
     asm volatile("lgdt %0" :: "m"(gdtp));
 
     asm volatile(
@@ -76,5 +78,9 @@ void init_gdt_tss(void) {
         :::"rax"
     );
 
+    printk(COLOR_GREEN, "GDT installed\n");
+
     asm volatile("ltr %%ax" :: "a"(0x18));
+
+    printk(COLOR_GREEN, "TSS installed\n");
 }

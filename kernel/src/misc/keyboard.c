@@ -1,5 +1,6 @@
 #include <misc/keyboard.h>
 #include <misc/serial.h>
+#include <misc/print.h>
 #include <arch/x86_64/pic.h>
 #include <arch/x86_64/pit.h>
 
@@ -88,6 +89,7 @@ void init_keyboard() {
     while ((inb(PS2_STATUS_PORT) & 1) != 0) {
         inb(PS2_DATA_PORT);
     }
+    printk(COLOR_GREEN, "Keyboard installed\n");
 }
 
 void keyboard_callback() {

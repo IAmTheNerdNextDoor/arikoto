@@ -2,6 +2,7 @@
 #include <misc/heap.h>
 #include <misc/kernel.h>
 #include <misc/string.h>
+#include <misc/print.h>
 #include <arch/x86_64/pit.h>
 #include <arch/x86_64/pic.h>
 #include <arch/x86_64/spinlock.h>
@@ -66,6 +67,8 @@ void init_multitasking(void) {
     task_list_tail = &kernel_task;
 
     current_task = &kernel_task;
+
+    printk(COLOR_GREEN, "Preemptive multitasking installed\n");
 }
 
 task_t* task_create(void (*entry_point)(void*), void* arg, const char* name, uint8_t priority) {
@@ -128,6 +131,8 @@ task_t* task_create(void (*entry_point)(void*), void* arg, const char* name, uin
     task_add_to_ready_queue(task);
 
     spinlock_release(&scheduler_lock);
+
+    printk(COLOR_GREEN, "Task created: %s \n", name);
 
     return task;
 }

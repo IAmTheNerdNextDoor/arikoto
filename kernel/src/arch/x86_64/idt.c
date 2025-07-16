@@ -1,6 +1,7 @@
 #include <arch/x86_64/isr.h>
 #include <arch/x86_64/irq.h>
 #include <misc/serial.h>
+#include <misc/print.h>
 
 struct idt_entry {
     uint16_t isr_low;   /* Lower 16 bits of ISR */
@@ -61,5 +62,7 @@ void init_idt() {
     idt_set_gate(33, (uint64_t)do_irq1, 0x08, 0x8E);
 
     asm volatile("lidt (%0)" : : "r" (&idtp));
+    printk(COLOR_GREEN, "IDT installed\n");
     asm volatile("sti");
+    printk(COLOR_GREEN, "Interrupts enabled\n");
 }
