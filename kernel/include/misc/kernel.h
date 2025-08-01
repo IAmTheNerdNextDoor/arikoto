@@ -143,5 +143,5 @@ static __attribute__((unused)) unsigned int parse_hex(const char *s) {
     return result;
 }
 
-void panic(const char *fmt, ...);
+void panic(const char *fmt);
 void print_logo_and_tagline();

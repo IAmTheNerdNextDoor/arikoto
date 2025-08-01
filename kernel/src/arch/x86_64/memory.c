@@ -50,10 +50,10 @@ size_t get_free_memory() {
 /* Initialize the physical memory manager */
 void init_pmm() {
     if (memorymap_info.response == NULL) {
-        panic("PANIC: PMM: Could not acquire memory map response\n");
+        panic("Could not acquire memory map response");
     }
      if (kernel_address_request.response == NULL) {
-        panic("PANIC: PMM: Could not acquire kernel address response\n");
+        panic("Could not acquire kernel address response");
     }
 
     size_t entry_count = memorymap_info.response->entry_count;
@@ -166,10 +166,13 @@ void *allocate_page() {
             BITMAP_SET(i);
             used_pages++;
             free_pages--;
+
             void *addr = (void *)((uintptr_t)i * PAGE_SIZE);
+            void *vaddr = (void *)((uintptr_t)addr + VMM_HIGHER_HALF);
+
+            memset(vaddr, 0, PAGE_SIZE);
 
             spinlock_release(&pmm_lock);
-
             return addr;
         }
     }

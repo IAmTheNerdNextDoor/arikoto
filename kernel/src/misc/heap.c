@@ -33,7 +33,7 @@ void init_heap(void) {
 
     void *heap_phys_base = allocate_page();
     if (heap_phys_base == NULL) {
-        panic("PANIC: HEAP: Failed to allocate initial heap page\n");
+        panic("Failed to allocate initial heap page");
     }
 
     heap_start = (void *)((uintptr_t)heap_phys_base + VMM_HIGHER_HALF);
@@ -123,7 +123,7 @@ void kfree(void *ptr) {
         block_size < MIN_ALLOC_SIZE ||
         ((uintptr_t)block_start % HEAP_ALIGNMENT) != 0)
     {
-        panic("PANIC: KFREE: Invalid pointer or heap corruption detected at %p (size %zu)\n", ptr, block_size);
+        panic("Invalid pointer or heap corruption detected");
         return;
     }
 

@@ -668,6 +668,7 @@ do_isr14:
     push r14
     push r15
 
+    mov rdi, rsp
     cld
     call isr14
 

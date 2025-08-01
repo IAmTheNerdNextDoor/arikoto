@@ -2,9 +2,8 @@
 #include <misc/print.h>
 #include <misc/shell.h>
 
-void panic(const char *fmt, ...) {
+void panic(const char *fmt) {
     asm volatile ("cli");
-    screen_clear();
     // printk(COLOR_RED,
     //     "+======================================================================================================+\n"
     //     "| ##    ## ######## ########  ##    ## ######## ##          ########     ###    ##    ## ####  ######  |\n"
@@ -17,13 +16,7 @@ void panic(const char *fmt, ...) {
     //     "+======================================================================================================+\n\n"); /* Will also reintroduced this at some point */
 
 
-    printk(COLOR_WHITE, "Arikoto has encountered a fatal exception.\n\n");
-    char panic_buffer[4096];
-    va_list args;
-    va_start(args, fmt);
-    vsnprintf(panic_buffer, sizeof(panic_buffer), fmt, args);
-    va_end(args);
-    printk(COLOR_WHITE, "%s\n", panic_buffer);
+    printk(COLOR_WHITE, "PANIC: %s\n\n", fmt);
 
     cmd_minimal_uptime();
 

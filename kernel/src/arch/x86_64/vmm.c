@@ -201,7 +201,7 @@ uintptr_t vmm_virt_to_phys(pagemap_t *pagemap, uintptr_t virt_addr) {
 
 void vmm_switch_to(pagemap_t *pagemap) {
     if (!pagemap || !pagemap->top_level) {
-        panic("PANIC: VMM: Attempted to switch to an invalid pagemap\n");
+        panic("Attempted to switch to an invalid pagemap\n");
         return;
     }
 
@@ -212,18 +212,18 @@ void vmm_switch_to(pagemap_t *pagemap) {
 
 void init_vmm(void) {
     if (hhdm_request.response == NULL) {
-        panic("PANIC: VMM: HHDM request response missing\n");
+        panic("HHDM request response missing\n");
     }
     if (kernel_address_request.response == NULL) {
-        panic("PANIC: VMM: Kernel Address request response missing\n");
+        panic("Kernel Address request response missing\n");
     }
     if (memorymap_info.response == NULL) {
-        panic("PANIC: VMM: Memory Map request response missing\n");
+        panic("Memory Map request response missing\n");
     }
 
     void *pml4_phys = allocate_page();
     if (pml4_phys == NULL) {
-        panic("PANIC: VMM: Failed to allocate kernel PML4 table page\n");
+        panic("Failed to allocate kernel PML4 table page\n");
     }
     uint64_t *pml4_virt = (uint64_t *)((uintptr_t)pml4_phys + VMM_HIGHER_HALF);
     memset(pml4_virt, 0, PAGE_SIZE);
@@ -260,8 +260,7 @@ void init_vmm(void) {
         }
 
         if (!vmm_map_page(kernel_pagemap, p_virt, p_phys, flags)) {
-            panic("PANIC: VMM: Failed to map kernel page Virt: %p Phys: 0x%x Flags: %p\n",
-                  (void*)p_virt, p_phys, (void*)flags);
+            panic("Failed to map kernel page\n");
         }
     }
 
@@ -278,18 +277,16 @@ void init_vmm(void) {
 
         for (uintptr_t p = map_base; p < map_top; p += PAGE_SIZE) {
             if (!vmm_map_page(kernel_pagemap, p + VMM_HIGHER_HALF, p, PTE_PRESENT | PTE_WRITABLE | PTE_NX)) {
-                 panic("PANIC: VMM: Failed to map HHDM page Phys: 0x%x Virt: 0x%x\n", p, p + VMM_HIGHER_HALF);
+                 panic("Failed to map HHDM page");
             }
         }
 
-        const uintptr_t IDENTITY_MAP_LIMIT = 0x100000000;
+        const uintptr_t IDENTITY_MAP_LIMIT = 0x00100000;
         if (map_base < IDENTITY_MAP_LIMIT) {
             uintptr_t identity_top = (map_top > IDENTITY_MAP_LIMIT) ? IDENTITY_MAP_LIMIT : map_top;
             for (uintptr_t p = map_base; p < identity_top; p += PAGE_SIZE) {
-                if (p == 0) continue;
-
                 if (!vmm_map_page(kernel_pagemap, p, p, PTE_PRESENT | PTE_WRITABLE | PTE_NX)) {
-                     panic("PANIC: VMM: Failed to identity map low page Phys: 0x%x\n", p);
+                     panic("Failed to identity map low page");
                 }
             }
         }

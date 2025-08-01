@@ -74,6 +74,7 @@ static int cmd_cat(int argc, char **argv);
 static int cmd_mem();
 static int cmd_reboot();
 static int cmd_divzero();
+static int cmd_pagefault();
 static int cmd_uptime();
 static int cmd_raytrace();
 static int cmd_vfstest();
@@ -88,6 +89,7 @@ void shell_init() {
     shell_register_command("mem", cmd_mem);
     shell_register_command("reboot", cmd_reboot);
     shell_register_command("dividebyzero", cmd_divzero);
+    shell_register_command("pagefault", cmd_pagefault);
     shell_register_command("uptime", cmd_uptime);
     shell_register_command("raytrace", cmd_raytrace);
     shell_register_command("vfstest", cmd_vfstest);
@@ -325,6 +327,16 @@ static int cmd_divzero() {
     int b = 0;
     int __attribute__((unused))result = a / b;
 
+    return -1;
+}
+
+static int cmd_pagefault() {
+    *(volatile int*)0x60000000 = 42;
+    /*
+    * Yes, this does come from a ToaruOS example.
+    * https://github.com/klange/toaruos/blob/master/modules/test.c
+    * Look for ln29.
+    */
     return -1;
 }
 
